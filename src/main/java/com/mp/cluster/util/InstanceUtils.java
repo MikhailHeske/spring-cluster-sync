@@ -8,10 +8,10 @@ import lombok.experimental.UtilityClass;
 public class InstanceUtils {
 
     public static boolean isReplica(InstanceInfo instanceInfo) {
-        return instanceInfo.getType() == InstanceType.REPLICA;
+        return instanceInfo != null && instanceInfo.getType() == InstanceType.REPLICA;
     }
 
     public static boolean isMaster(InstanceInfo instanceInfo) {
-        return instanceInfo.getType() == InstanceType.MASTER;
+        return instanceInfo != null && instanceInfo.getType() == InstanceType.MASTER;
     }
 }

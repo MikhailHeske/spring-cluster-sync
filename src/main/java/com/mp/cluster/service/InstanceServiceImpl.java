@@ -23,12 +23,16 @@ import static com.mp.cluster.util.InstanceUtils.isReplica;
 public class InstanceServiceImpl implements InstanceService {
 
     private final InstanceEntityService entityService;
-    private final static String INSTANCE_ID = UUID.randomUUID().toString();
+    private final String INSTANCE_ID = UUID.randomUUID().toString();
 
     private InstanceInfo currentInstance;
 
     @Override
     public InstanceInfo register() {
+        if (currentInstance != null) {
+            log.warn("Instance is already registered");
+            return currentInstance;
+        }
         Instant now = Instant.now();
         currentInstance = InstanceInfo.
                 builder()
@@ -56,6 +60,9 @@ public class InstanceServiceImpl implements InstanceService {
 
     @Override
     public void monitor() {
+        if (currentInstance == null) {
+            return;
+        }
         currentInstance = entityService.getById(currentInstance.getInstanceId());
         currentInstance.setLastMonitorTime(Instant.now());
         currentInstance.setStatus(InstanceStatus.ACTIVE);
